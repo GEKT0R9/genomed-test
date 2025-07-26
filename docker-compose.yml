@@ -1,0 +1,29 @@
+version: '2'
+services:
+  php:
+    image: yiisoftware/yii2-php:8.3-fpm-nginx
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - '8000:80'
+    environment:
+      PHP_ENABLE_XDEBUG: 1
+      XDEBUG_MODE: "develop"
+    depends_on:
+      - mysql
+    networks:
+      - genomed-net
+  mysql:
+    image: mysql
+    ports:
+      - '127.0.0.1:3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: genomed-root
+      MYSQL_DATABASE: genomed
+      MYSQL_USER: genomed
+      MYSQL_PASSWORD: genomed
+    networks:
+      - genomed-net
+networks:
+  genomed-net:
