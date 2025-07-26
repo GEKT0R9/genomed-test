@@ -50,7 +50,23 @@ $('#url-form')
         $('#url-ok-button').html('ОК');
         return true;
     });
-$('#copy-btn').on('click', function() {
+
+function unsecuredCopyToClipboard() {
+    const shortUrl = document.getElementById("short-url");
+    shortUrl.select();
+    try {
+        document.execCommand('copy');
+
+        const originalText = $('#copy-btn').html();
+        $('#copy-btn').html('<i class="bi bi-check2"></i> Скопировано!');
+        setTimeout(function() {
+            $('#copy-btn').html(originalText);
+        }, 2000);
+    } catch (err) {
+        alert('При копировании возникла ошибка')
+    }
+}
+function securedCopyToClipboard() {
     const shortUrl = $('#short-url').val();
     window.navigator.clipboard
         .writeText(shortUrl)
@@ -61,7 +77,15 @@ $('#copy-btn').on('click', function() {
                 $('#copy-btn').html(originalText);
             }, 2000);
         })
-        .catch(function (reason){
+        .catch(function (){
             alert('При копировании возникла ошибка')
         });
+}
+
+$('#copy-btn').on('click', function() {
+    if (window.navigator.clipboard){
+        securedCopyToClipboard()
+    } else {
+        unsecuredCopyToClipboard()
+    }
 });
